@@ -42,7 +42,7 @@ class VLLMDeployment:
         lora_modules: Optional[List[LoRAModulePath]] = None,
         prompt_adapters: Optional[List[PromptAdapterPath]] = None,
         request_logger: Optional[RequestLogger] = None,
-        chat_template: Optional[str] = None,
+        chat_template: Optional[str] = "tool_chat_template_mistral.jinja",
     ):
         logger.info(f"Starting with engine args: {engine_args}")
         self.openai_serving_chat = None

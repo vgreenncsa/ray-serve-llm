@@ -42,6 +42,7 @@ class VLLMDeployment:
         lora_modules: Optional[List[LoRAModulePath]] = None,
         prompt_adapters: Optional[List[PromptAdapterPath]] = None,
         request_logger: Optional[RequestLogger] = None,
+        chat_template: Optional[str] = "None",
     ):
         logger.info(f"Starting with engine args: {engine_args}")
         self.openai_serving_chat = None
@@ -50,6 +51,7 @@ class VLLMDeployment:
         self.lora_modules = lora_modules
         self.prompt_adapters = prompt_adapters
         self.request_logger = request_logger
+        self.chat_template = chat_template
         self.engine = AsyncLLMEngine.from_engine_args(engine_args)
 
     @app.post("/v1/chat/completions")
@@ -76,6 +78,7 @@ class VLLMDeployment:
                 lora_modules=self.lora_modules,
                 prompt_adapters=self.prompt_adapters,
                 request_logger=self.request_logger,
+                chat_template=None,
             )
         logger.info(f"Request: {request}")
         generator = await self.openai_serving_chat.create_chat_completion(
@@ -146,4 +149,5 @@ def build_app(cli_args: Dict[str, str]) -> serve.Application:
         parsed_args.lora_modules,
         parsed_args.prompt_adapters,
         cli_args.get("request_logger"),
+        parsed_args.chat_template,
     )
